@@ -12,6 +12,18 @@ final class RecipeContract {
     private RecipeContract() {
     }
 
+    // String that corresponds to our CREATE statement.
+    // It contains the definitions of all the key columns: id, name, description & imageResourceId
+    static final String CREATE_RECIPE_ENTRY_TABLE =
+            "CREATE TABLE " + RecipeEntry.TABLE_NAME +
+                    " ( " +
+                    RecipeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    RecipeEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+                    RecipeEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
+                    RecipeEntry.COLUMN_IMAGE_RESOURCE_ID + " INTEGER NOT NULL, " +
+                    "UNIQUE ( " + RecipeEntry._ID + ") ON CONFLICT REPLACE )";
+
+
 
     // Reference fields to the Recipe class
     private long id;

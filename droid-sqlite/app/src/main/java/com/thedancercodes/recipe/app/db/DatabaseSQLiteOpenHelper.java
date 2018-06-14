@@ -23,9 +23,14 @@ public class DatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, VERSION_NUMBER);
     }
 
+    // We receive an instance of SQLite Database class as a parameter.
+    // We will use it to provide queries that we need to create our individual tables.
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        // This method take a string that contains the query for creating the table.
+        // Instead of defining the string inline here, we add it to our RecipeContract class.
+        db.execSQL();
     }
 
     @Override
