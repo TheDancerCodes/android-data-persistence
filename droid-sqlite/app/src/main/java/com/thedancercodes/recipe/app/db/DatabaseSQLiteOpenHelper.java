@@ -28,13 +28,24 @@ public class DatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        // Create the Recipe table
         // This method take a string that contains the query for creating the table.
         // Instead of defining the string inline here, we add it to our RecipeContract class.
-        db.execSQL();
+        db.execSQL(RecipeContract.CREATE_RECIPE_ENTRY_TABLE);
+
+        // Create the RecipeStep Table
+        db.execSQL(RecipeContract.CREATE_RECIPE_STEP_ENTRY_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        // We don't need to retain a users data, so we drop the existing tables &
+        // then have them created again
+        db.execSQL("DROP TABLE IF EXISTS " + RecipeContract.RecipeStepEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + RecipeContract.RecipeEntry.TABLE_NAME);
+
+        onCreate(db);
 
     }
 }

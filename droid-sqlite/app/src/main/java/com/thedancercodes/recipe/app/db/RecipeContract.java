@@ -23,6 +23,16 @@ final class RecipeContract {
                     RecipeEntry.COLUMN_IMAGE_RESOURCE_ID + " INTEGER NOT NULL, " +
                     "UNIQUE ( " + RecipeEntry._ID + ") ON CONFLICT REPLACE )";
 
+    static final String CREATE_RECIPE_STEP_ENTRY_TABLE =
+            "CREATE TABLE " + RecipeStepEntry.TABLE_NAME +
+                    " ( " +
+                    RecipeStepEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    RecipeStepEntry.COLUMN_RECIPE_ID + " INTEGER NOT NULL " +
+                    " REFERENCES " + RecipeEntry.TABLE_NAME + "," +
+                    RecipeStepEntry.COLUMN_STEP_NUMBER + " INTEGER NOT NULL," +
+                    RecipeStepEntry.COLUMN_INSTRUCTION + " TEXT NOT NULL," +
+                    "UNIQUE (" + RecipeStepEntry._ID + ") ON CONFLICT REPLACE)";
+
 
 
     // Reference fields to the Recipe class
