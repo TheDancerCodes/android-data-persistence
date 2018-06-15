@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.thedancercodes.recipe.app.R;
+import com.thedancercodes.recipe.app.db.RecipeAppDataSource;
 
 public class RecipesActivity extends AppCompatActivity
 {
@@ -14,6 +15,7 @@ public class RecipesActivity extends AppCompatActivity
 
     private RecyclerView recipesRecyclerView;
     private RecipesAdapter adapter;
+    private RecipeAppDataSource dataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -26,6 +28,9 @@ public class RecipesActivity extends AppCompatActivity
 
         recipesRecyclerView = (RecyclerView) findViewById(R.id.recipes_recycler_view);
 
+        // Create a new instance of the RecipeAppDataSource class.
+        dataSource = new RecipeAppDataSource(this);
+
         setupRecyclerView();
     }
 
@@ -33,12 +38,20 @@ public class RecipesActivity extends AppCompatActivity
     protected void onResume ()
     {
         super.onResume();
+
+        // Make a call to dataSource.open() method:
+        // This is how we make a database connection that we can use inside this Activity.
+        dataSource.open();
     }
 
     @Override
     protected void onPause ()
     {
         super.onPause();
+
+        // Make a call to the dataSource.close() method:
+        // Whenever we are not interacting with this particular activity.
+        dataSource.close();
     }
 
     private void setupRecyclerView ()
