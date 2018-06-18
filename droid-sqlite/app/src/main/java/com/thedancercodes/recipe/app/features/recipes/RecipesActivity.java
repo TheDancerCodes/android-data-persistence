@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.thedancercodes.recipe.app.R;
 import com.thedancercodes.recipe.app.db.RecipeAppDataSource;
+import com.thedancercodes.recipe.app.db.RecipesDataProvider;
+import com.thedancercodes.recipe.app.models.Recipe;
 
 public class RecipesActivity extends AppCompatActivity
 {
@@ -42,6 +44,14 @@ public class RecipesActivity extends AppCompatActivity
         // Make a call to dataSource.open() method:
         // This is how we make a database connection that we can use inside this Activity.
         dataSource.open();
+
+        // Iterate over our list of recipes from the RecipesDataProvider &
+        // then pass them one by one to the DataSources’s createRecipe() method.
+        for (Recipe recipe : RecipesDataProvider.recipesList) {
+
+            // Call through to our createRecipe method on the dataSource class.
+            dataSource.createRecipe(recipe);
+        }
     }
 
     @Override
