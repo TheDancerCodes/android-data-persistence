@@ -1,8 +1,11 @@
 package com.thedancercodes.recipe.app.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.thedancercodes.recipe.app.models.Recipe;
 
 /**
  * Created by TheDancerCodes on 15/06/2018.
@@ -36,5 +39,24 @@ public class RecipeAppDataSource {
         dbHelper.close();
 
         Log.d(TAG, "Database is closed");
+    }
+
+    // Method that will handle inserting records in our database.
+    public void createRecipe(Recipe recipe) {
+
+        // Create new ContentValues Object and store it in a local variable.
+        ContentValues values = new ContentValues();
+
+        // Take advantage of the put methods in-order to provide the information
+        // that we want to have inserted
+        values.put(RecipeContract.RecipeEntry.COLUMN_NAME, recipe.getName());
+        values.put(RecipeContract.RecipeEntry.COLUMN_DESCRIPTION, recipe.getDescription());
+        values.put(RecipeContract.RecipeEntry.COLUMN_IMAGE_RESOURCE_ID, recipe.getImageResourceId());
+
+        // Execute the DB’s insert method in order to store the recipe.
+        long rowId = database.insert(RecipeContract.RecipeEntry.TABLE_NAME, null, values);
+
+        // Log the row ID of the newly inserted row, or -1 if an error occurred
+        Log.d(TAG, "Recipe with id: " + rowId);
     }
 }
