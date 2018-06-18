@@ -30,4 +30,7 @@ dependencies {
     implementation "com.android.support:cardview-v7:$supportLibVersion"
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // Android DB Inspector: Include as a debug compile time dependency
+    debugImplementation 'im.dino:dbinspector:3.4.1@aar'
 }
