@@ -111,6 +111,36 @@ public class RecipeAppDataSource {
         // Use rawQuery() to query the data.
         Cursor cursor = database.rawQuery(selectQuery, null);
 
+        try {
+
+            // While loop that uses the cursor's moveToNext() method as a condition
+            while (cursor.moveToNext()){
+
+                // Retrieve content from Cursor and store it inside Recipe's List
+                Recipe recipe = new Recipe(
+                        cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_DESCRIPTION)),
+                        cursor.getInt(cursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_IMAGE_RESOURCE_ID))
+                );
+
+                // Add Recipe ID
+                recipe.setId(cursor.getLong(cursor.getColumnIndex(RecipeContract.RecipeEntry._ID)));
+
+                // Add Recipe to Recipe's list
+                recipes.add(recipe);
+            }
+
+        }
+        finally {
+
+            // Check whether Cursor is not null & not closed already
+            if (cursor != null && !cursor.isClosed()) {
+
+                // Close the Cursor
+                cursor.close();
+            }
+        }
+
         return recipes;
     }
 }

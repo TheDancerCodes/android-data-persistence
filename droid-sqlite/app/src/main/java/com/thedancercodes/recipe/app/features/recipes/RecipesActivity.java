@@ -52,6 +52,10 @@ public class RecipesActivity extends AppCompatActivity
             // Call through to our createRecipe method on the dataSource class.
             dataSource.createRecipe(recipe);
         }
+
+        // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
+        // Pass it to the recycler view adapter
+        adapter.setRecipes(dataSource.getAllRecipes());
     }
 
     @Override
