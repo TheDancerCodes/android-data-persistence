@@ -2,12 +2,14 @@ package com.thedancercodes.recipe.app.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.thedancercodes.recipe.app.models.Recipe;
 import com.thedancercodes.recipe.app.models.RecipeStep;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,4 +98,19 @@ public class RecipeAppDataSource {
         Log.d(TAG, "Recipe step with id: " + rowId);
     }
 
+    // getAllRecipes() method, that we will use to return the list of our stored recipes.
+    public  List<Recipe> getAllRecipes() {
+
+        // Instantiate and return an empty list of recipes for now
+        List<Recipe> recipes = new ArrayList<>();
+
+
+        // selectQuery as a local variable: Contains our SELECT statement
+        String selectQuery = "SELECT * FROM recipe";
+
+        // Use rawQuery() to query the data.
+        Cursor cursor = database.rawQuery(selectQuery, null);
+
+        return recipes;
+    }
 }
