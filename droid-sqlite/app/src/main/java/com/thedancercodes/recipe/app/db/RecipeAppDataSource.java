@@ -180,4 +180,13 @@ public class RecipeAppDataSource {
         // Log response to verify that one record is updated
         Log.d(TAG, "Number of records deleted: " + count);
     }
+
+    public void deleteAllRecipes() {
+
+        // Make call to DB’s update method
+        int count = database.delete(RecipeContract.RecipeEntry.TABLE_NAME, null, null);
+
+        // Log response to verify that one record is updated
+        Log.d(TAG, "Number of records deleted: " + count);
+    }
 }

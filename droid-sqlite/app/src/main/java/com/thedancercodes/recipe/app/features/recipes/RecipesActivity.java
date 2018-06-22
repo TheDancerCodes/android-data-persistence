@@ -59,11 +59,8 @@ public class RecipesActivity extends AppCompatActivity
         // Store List of recipes in a variable - allRecipes
         List<Recipe> allRecipes = getRecipes();
 
-        // Get first record & store in a variable - updatedRecipe
-        Recipe updatedRecipe = allRecipes.get(0);
-
-        // Delete the record
-        dataSource.deleteRecipe(updatedRecipe);
+        // Delete all records
+        dataSource.deleteAllRecipes();
 
         // Make another call to getRecipes() so that we can retrieve all Recipes from DB again.
         getRecipes();
