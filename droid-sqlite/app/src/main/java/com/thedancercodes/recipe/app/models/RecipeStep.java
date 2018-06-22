@@ -1,11 +1,23 @@
 package com.thedancercodes.recipe.app.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
+
+@Entity(tableName = "recipe_steps",
+        primaryKeys = { "step_number", "recipe_id" },
+        indices = { @Index("recipe_id") },
+        foreignKeys = @ForeignKey(entity = Recipe.class,
+        parentColumns = "id",
+        childColumns = "recipe_id"))
 public class RecipeStep
 {
-    private long id;
 
+    @ColumnInfo(name = "recipe_id")
     private long recipeId;
 
+    @ColumnInfo(name = "step_number")
     private int stepNumber;
 
     private String instruction;
@@ -14,16 +26,6 @@ public class RecipeStep
     {
         this.stepNumber = stepNumber;
         this.instruction = instruction;
-    }
-
-    public long getId ()
-    {
-        return id;
-    }
-
-    public void setId(long id)
-    {
-        this.id = id;
     }
 
     public long getRecipeId()
@@ -56,14 +58,4 @@ public class RecipeStep
         this.instruction = instruction;
     }
 
-    @Override
-    public String toString ()
-    {
-        return "RecipeStep{" +
-                "id=" + id +
-                ", recipeId=" + recipeId +
-                ", stepNumber=" + stepNumber +
-                ", instruction='" + instruction + '\'' +
-                '}';
-    }
 }

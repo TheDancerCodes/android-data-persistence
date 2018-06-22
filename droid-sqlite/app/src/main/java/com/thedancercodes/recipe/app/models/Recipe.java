@@ -1,17 +1,29 @@
 package com.thedancercodes.recipe.app.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.List;
 
+@Entity
 public class Recipe
 {
+    // Allow Room to handle the generation of our IDs for us.
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     private String name;
 
     private String description;
 
+    // To have control over the columns used for our database.
+    @ColumnInfo(name = "image_resource_id")
     private int imageResourceId;
 
+    // To prevent room from processing our recipe steps.
+    @Ignore
     private List<RecipeStep> steps;
 
     public Recipe (String name, String description, int imageResourceId)
