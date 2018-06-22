@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.thedancercodes.recipe.app.R;
 import com.thedancercodes.recipe.app.db.RecipeAppDataSource;
 import com.thedancercodes.recipe.app.db.RecipesDataProvider;
 import com.thedancercodes.recipe.app.models.Recipe;
+
+import java.util.List;
 
 public class RecipesActivity extends AppCompatActivity
 {
@@ -53,9 +56,33 @@ public class RecipesActivity extends AppCompatActivity
             dataSource.createRecipe(recipe);
         }
 
+        // Store List of recipes in a variable - allRecipes
+        List<Recipe> allRecipes = getRecipes();
+
+        // Get first record & store in a variable - updatedRecipe
+        Recipe updatedRecipe = allRecipes.get(0);
+
+        // Set new record name
+        updatedRecipe.setName("Yellow Cake!");
+
+        // Update the record
+        dataSource.updateRecipe(updatedRecipe);
+
+        // Make another call to getRecipes() so that we can retrieve all Recipes from DB again.
+        getRecipes();
+    }
+
+    private List<Recipe> getRecipes() {
+
         // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
-        // Pass it to the recycler view adapter
-        adapter.setRecipes(dataSource.getAllRecipes());
+        List<Recipe> allRecipes = dataSource.getAllRecipes();
+    for (Recipe recipe : allRecipes) {
+      Log.i(TAG, "The Recipe: " + recipe);
+    }
+        // Pass list of recipes to the recycler view adapter
+    adapter.setRecipes(allRecipes);
+
+    return allRecipes;
     }
 
     @Override

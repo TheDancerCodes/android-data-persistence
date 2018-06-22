@@ -143,4 +143,27 @@ public class RecipeAppDataSource {
 
         return recipes;
     }
+
+    public void updateRecipe(Recipe recipe) {
+
+        // Use ContentValues Object to update records in DB
+        ContentValues values = new ContentValues();
+
+        values.put(RecipeContract.RecipeEntry.COLUMN_NAME, recipe.getName());
+        values.put(RecipeContract.RecipeEntry.COLUMN_DESCRIPTION, recipe.getDescription());
+        values.put(RecipeContract.RecipeEntry.COLUMN_IMAGE_RESOURCE_ID, recipe.getImageResourceId());
+
+        // Create the selection string
+        String selection = RecipeContract.RecipeEntry._ID + " = ?";
+
+        // selectionArgs Array: Only has 1 item - the ID of the Recipe in string format.
+        String[] selectionArgs = { String.valueOf(recipe.getId())};
+
+        // Make call to DB's update method
+        int count = database.update(RecipeContract.RecipeEntry.TABLE_NAME, values, selection, selectionArgs);
+
+        // Log response to verify that one record is updated
+        Log.d(TAG, "Number of records updated: " + count);
+
+    }
 }
