@@ -62,11 +62,8 @@ public class RecipesActivity extends AppCompatActivity
         // Get first record & store in a variable - updatedRecipe
         Recipe updatedRecipe = allRecipes.get(0);
 
-        // Set new record name
-        updatedRecipe.setName("Yellow Cake!");
-
-        // Update the record
-        dataSource.updateRecipe(updatedRecipe);
+        // Delete the record
+        dataSource.deleteRecipe(updatedRecipe);
 
         // Make another call to getRecipes() so that we can retrieve all Recipes from DB again.
         getRecipes();

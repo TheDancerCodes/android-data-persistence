@@ -164,6 +164,20 @@ public class RecipeAppDataSource {
 
         // Log response to verify that one record is updated
         Log.d(TAG, "Number of records updated: " + count);
+    }
 
+    public void deleteRecipe(Recipe recipe) {
+
+        // Create the selection string
+        String selection = RecipeContract.RecipeEntry._ID + " = ?";
+
+        // selectionArgs Array: Only has 1 item - the ID of the Recipe in string format.
+        String[] selectionArgs = { String.valueOf(recipe.getId())};
+
+        // Make call to DB's delete method
+        int count = database.delete(RecipeContract.RecipeEntry.TABLE_NAME, selection, selectionArgs);
+
+        // Log response to verify that one record is updated
+        Log.d(TAG, "Number of records deleted: " + count);
     }
 }
