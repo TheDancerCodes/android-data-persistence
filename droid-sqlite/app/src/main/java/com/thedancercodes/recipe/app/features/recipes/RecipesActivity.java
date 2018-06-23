@@ -1,5 +1,6 @@
 package com.thedancercodes.recipe.app.features.recipes;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import com.thedancercodes.recipe.app.db.RecipeAppDataSource;
 import com.thedancercodes.recipe.app.db.RecipesDataProvider;
 import com.thedancercodes.recipe.app.models.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipesActivity extends AppCompatActivity
@@ -44,20 +46,39 @@ public class RecipesActivity extends AppCompatActivity
     {
         super.onResume();
 
-        // Iterate over our list of recipes from the RecipesDataProvider &
-        // then pass them one by one to the DataSources’s createRecipe() method.
-        for (Recipe recipe : RecipesDataProvider.recipesList) {
+        // Since Room doesn't allow you to perform database operations on the main thread by default,
+        // we’re going to wrap this inside an anonymous async task.
+        new AsyncTask<Void, Void, List<Recipe>>() {
 
-            // Call through to our createRecipe method on the dataSource class.
-            dataSource.createRecipe(recipe);
-        }
+            @Override
+            protected List<Recipe> doInBackground(Void... voids) {
 
-        // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
-        List<Recipe> recipes = dataSource.getAllRecipes();
+                // Iterate over our list of recipes from the RecipesDataProvider &
+                // then pass them one by one to the DataSources’s createRecipe() method.
+                for (Recipe recipe : RecipesDataProvider.recipesList) {
 
-        // Pass list of recipes to the recycler view adapter
-        adapter.setRecipes(recipes);
-        adapter.notifyDataSetChanged();
+                    // Call through to our createRecipe method on the dataSource class.
+                    dataSource.createRecipe(recipe);
+                }
+
+                return new ArrayList<>();
+            }
+
+            // Implement onPostExecute() method; soe we can do something with the results later.
+            @Override
+            protected void onPostExecute(List<Recipe> recipes) {
+
+            }
+        }.execute();
+
+
+
+//        // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
+//        List<Recipe> recipes = dataSource.getAllRecipes();
+//
+//        // Pass list of recipes to the recycler view adapter
+//        adapter.setRecipes(recipes);
+//        adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView ()

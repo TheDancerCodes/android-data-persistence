@@ -20,18 +20,42 @@ public class RecipeAppDataSource {
     // A common way of providing a unique tag for the various classes in your application.
     private static final String TAG = RecipeAppDataSource.class.getSimpleName();
 
+    // DAO fields
+    private final RecipeDao recipeDao;
+    private final RecipeStepDao recipeStepDao;
+
     public RecipeAppDataSource(Context context) {
 
+        // Get the RecipeAppDatabase instance using the getInstance() method
+        RecipeAppDatabase database = RecipeAppDatabase.getInstance(context);
+
+        // Get access to DAOs
+        recipeDao = database.recipeDao();
+        recipeStepDao = database.recipeStepDao();
     }
 
 
     // Method that will handle inserting records in our database.
     public void createRecipe(Recipe recipe) {
 
-        long rowId = -1;
+        // Create Recipe
+        long rowId = recipeDao.createRecipe(recipe);
+
+        // Get Steps
+        List<RecipeStep> steps = recipe.getSteps();
+
+        // Check that we have steps to insert
+        if (steps != null) {
+            for (RecipeStep step : steps) {
+                // Set our Recipe ID to each recipe step
+                step.setRecipeId(rowId);
+            }
+
+            recipeStepDao.insertAll(steps);
+        }
 
 
-        // Log the row ID of the newly inserted row, or -1 if an error occurred
+        // Log ID of the created Recipe
         Log.d(TAG, "createRecipe: the id: " + rowId);
 
     }
