@@ -44,10 +44,6 @@ public class RecipesActivity extends AppCompatActivity
     {
         super.onResume();
 
-        // Make a call to dataSource.open() method:
-        // This is how we make a database connection that we can use inside this Activity.
-        dataSource.open();
-
         // Iterate over our list of recipes from the RecipesDataProvider &
         // then pass them one by one to the DataSources’s createRecipe() method.
         for (Recipe recipe : RecipesDataProvider.recipesList) {
@@ -56,37 +52,12 @@ public class RecipesActivity extends AppCompatActivity
             dataSource.createRecipe(recipe);
         }
 
-        // Store List of recipes in a variable - allRecipes
-        List<Recipe> allRecipes = getRecipes();
-
-        // Delete all records
-        dataSource.deleteAllRecipes();
-
-        // Make another call to getRecipes() so that we can retrieve all Recipes from DB again.
-        getRecipes();
-    }
-
-    private List<Recipe> getRecipes() {
-
         // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
-        List<Recipe> allRecipes = dataSource.getAllRecipes();
-    for (Recipe recipe : allRecipes) {
-      Log.i(TAG, "The Recipe: " + recipe);
-    }
+        List<Recipe> recipes = dataSource.getAllRecipes();
+
         // Pass list of recipes to the recycler view adapter
-    adapter.setRecipes(allRecipes);
-
-    return allRecipes;
-    }
-
-    @Override
-    protected void onPause ()
-    {
-        super.onPause();
-
-        // Make a call to the dataSource.close() method:
-        // Whenever we are not interacting with this particular activity.
-        dataSource.close();
+        adapter.setRecipes(recipes);
+        adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView ()
