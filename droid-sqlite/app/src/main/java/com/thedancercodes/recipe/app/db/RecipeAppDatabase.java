@@ -29,4 +29,9 @@ public abstract class RecipeAppDatabase extends RoomDatabase {
         return INSTANCE;
 
     }
+
+    // Add abstract methods to expose the DAO’s.
+    public abstract RecipeDao recipeDao();
+
+    public abstract RecipeStepDao recipeStepDao();
 }
