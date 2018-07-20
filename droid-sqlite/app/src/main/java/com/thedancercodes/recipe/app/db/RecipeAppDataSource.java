@@ -63,8 +63,12 @@ public class RecipeAppDataSource {
     // getAllRecipes() method, that we will use to return the list of our stored recipes.
     public  List<Recipe> getAllRecipes() {
 
-        // Instantiate and return an empty list of recipes for now
-        List<Recipe> recipes = new ArrayList<>();
+        // Get all recipes, loop over them & then add the list of steps.
+        List<Recipe> recipes = recipeDao.getAllRecipes();
+        for (Recipe recipe : recipes) {
+            List<RecipeStep> steps = recipeStepDao.getAllRecipeStepsByRecipeId(recipe.getId());
+            recipe.setSteps(steps); // Update each recipe object by providing our list of steps.
+        }
 
         return recipes;
     }

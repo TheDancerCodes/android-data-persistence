@@ -61,24 +61,20 @@ public class RecipesActivity extends AppCompatActivity
                     dataSource.createRecipe(recipe);
                 }
 
-                return new ArrayList<>();
+                // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
+                return dataSource.getAllRecipes();
             }
 
             // Implement onPostExecute() method; soe we can do something with the results later.
             @Override
             protected void onPostExecute(List<Recipe> recipes) {
 
+                // Pass the List of recipes to the RecyclerView Adapter
+                adapter.setRecipes(recipes);
+                adapter.notifyDataSetChanged();
+
             }
         }.execute();
-
-
-
-//        // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
-//        List<Recipe> recipes = dataSource.getAllRecipes();
-//
-//        // Pass list of recipes to the recycler view adapter
-//        adapter.setRecipes(recipes);
-//        adapter.notifyDataSetChanged();
     }
 
     private void setupRecyclerView ()
