@@ -1,32 +1,35 @@
 package com.thedancercodes.recipe.app.features.recipes;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.thedancercodes.recipe.app.R;
 import com.thedancercodes.recipe.app.db.RecipeAppDataSource;
 import com.thedancercodes.recipe.app.db.RecipesDataProvider;
 import com.thedancercodes.recipe.app.models.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-public class RecipesActivity extends AppCompatActivity
-{
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+public class RecipesActivity extends AppCompatActivity {
     private static final String TAG = RecipesActivity.class.getSimpleName();
 
     private RecyclerView recipesRecyclerView;
     private RecipesAdapter adapter;
     private RecipeAppDataSource dataSource;
+    private Disposable disposable;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
 
@@ -42,16 +45,24 @@ public class RecipesActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume ()
-    {
+    protected void onResume() {
         super.onResume();
 
-        // Since Room doesn't allow you to perform database operations on the main thread by default,
-        // we’re going to wrap this inside an anonymous async task.
-        new AsyncTask<Void, Void, List<Recipe>>() {
 
+        disposable = dataSource.getAllRecipes()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Recipe>>() {
+                    @Override
+                    public void accept(List<Recipe> recipes) throws Exception {
+                        adapter.setRecipes(recipes);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+        // Take advantage of RxJava’s Completable class to do background work
+        Completable.fromCallable(new Callable<Void>() {
             @Override
-            protected List<Recipe> doInBackground(Void... voids) {
+            public Void call() throws Exception {
 
                 // Iterate over our list of recipes from the RecipesDataProvider &
                 // then pass them one by one to the DataSources’s createRecipe() method.
@@ -61,32 +72,30 @@ public class RecipesActivity extends AppCompatActivity
                     dataSource.createRecipe(recipe);
                 }
 
-                // Call to the dataSource.getAllRecipes() method, to get list of Recipes.
-                return dataSource.getAllRecipes();
+                // Return null as we won't be doing anything with the results right now.
+                return null;
             }
-
-            // Implement onPostExecute() method; soe we can do something with the results later.
-            @Override
-            protected void onPostExecute(List<Recipe> recipes) {
-
-                // Pass the List of recipes to the RecyclerView Adapter
-                adapter.setRecipes(recipes);
-                adapter.notifyDataSetChanged();
-
-            }
-        }.execute();
+        })
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
-    private void setupRecyclerView ()
-    {
+    private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recipesRecyclerView.setLayoutManager(layoutManager);
 
         recipesRecyclerView.setHasFixedSize(true);
 
-        adapter = new RecipesAdapter( this );
-        recipesRecyclerView.setAdapter( adapter );
+        adapter = new RecipesAdapter(this);
+        recipesRecyclerView.setAdapter(adapter);
     }
 
+    @Override
+    protected void onDestroy() {
+
+        // Dispose our Disposable
+        disposable.dispose();
+        super.onDestroy();
+    }
 }

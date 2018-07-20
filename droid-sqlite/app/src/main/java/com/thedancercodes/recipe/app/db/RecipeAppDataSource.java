@@ -1,16 +1,14 @@
 package com.thedancercodes.recipe.app.db;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.thedancercodes.recipe.app.models.Recipe;
 import com.thedancercodes.recipe.app.models.RecipeStep;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Flowable;
 
 /**
  * Created by TheDancerCodes on 15/06/2018.
@@ -61,15 +59,9 @@ public class RecipeAppDataSource {
     }
 
     // getAllRecipes() method, that we will use to return the list of our stored recipes.
-    public  List<Recipe> getAllRecipes() {
+    public Flowable<List<Recipe>> getAllRecipes() {
 
-        // Get all recipes, loop over them & then add the list of steps.
-        List<Recipe> recipes = recipeDao.getAllRecipes();
-        for (Recipe recipe : recipes) {
-            List<RecipeStep> steps = recipeStepDao.getAllRecipeStepsByRecipeId(recipe.getId());
-            recipe.setSteps(steps); // Update each recipe object by providing our list of steps.
-        }
-
-        return recipes;
+        // Get all recipes
+        return recipeDao.getAllRecipes();
     }
 }

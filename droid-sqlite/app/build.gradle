@@ -36,6 +36,13 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$archComponentVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$archComponentVersion"
 
+    // Room RxJava Dependency
+    implementation "android.arch.persistence.room:rxjava2:$archComponentVersion"
+
+    // RxJava Dependencies
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
 
     // Android DB Inspector: Include as a debug compile time dependency
     debugImplementation 'im.dino:dbinspector:3.4.1@aar'

@@ -9,6 +9,8 @@ import com.thedancercodes.recipe.app.models.Recipe;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface RecipeDao {
 
@@ -17,5 +19,5 @@ public interface RecipeDao {
 
     // Add query method to DAO - To return a list of recipe objects
     @Query("SELECT * FROM recipe")
-    List<Recipe> getAllRecipes();
+    Flowable<List<Recipe>> getAllRecipes();
 }
